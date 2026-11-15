@@ -1,6 +1,16 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
+from database import init_db, get_readings, save_reading, get_readings_by_date
+from datetime import date
 
 app = FastAPI()
+init_db()
+
+
+class TemperatureReading(BaseModel):
+    timestamp:str
+    room_temp:float
+
 
 @app.get("/")
 def home():
@@ -8,9 +18,32 @@ def home():
         "msg": "hello world"
     }
 
-@app.get("/latest_temp")
-def get_latest_temp():
-    return {
-        "temp": 22,
-        "time": "smth"
-    }
+@app.get("/api/temp")
+def get_temp():
+    readings = get_readings()
+    temp_lst = []
+    for timestamp, room_temp in readings:
+        temp_lst.append(
+            {
+                "timestamp": timestamp,
+                "room_temp": room_temp
+            }
+        )
+    return temp_lst
+
+@app.get("/api/temp/date")
+def get_temp_by_date(date: date):
+    readings = get_readings_by_date(date.isoformat())
+    temp_lst = []
+    for timestamp, room_temp in readings:
+        temp_lst.append({
+            "timestamp": timestamp,
+            "room_temp": room_temp
+        })
+
+    return temp_lst
+
+@app.post("/api/temp")
+def add_temperature(reading: TemperatureReading):
+    save_reading(reading.timestamp, reading.room_temp)
+    return {"message":"temperature saved"}
