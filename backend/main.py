@@ -1,9 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from database import init_db, get_readings, save_reading, get_readings_by_date
+from database import init_db, get_readings, save_reading, get_readings_by_date, delete_reading
 from datetime import date
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
+
 init_db()
 
 
@@ -47,3 +56,8 @@ def get_temp_by_date(date: date):
 def add_temperature(reading: TemperatureReading):
     save_reading(reading.timestamp, reading.room_temp)
     return {"message":"temperature saved"}
+
+@app.delete("/api/del")
+def delete_datetime(datetime: str):
+    delete_reading(datetime)
+    return {"message":f"deleted {datetime}"}

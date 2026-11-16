@@ -40,6 +40,12 @@ def get_readings_by_date(date):
             ORDER BY timestamp""",
             (f"{date}%",)).fetchall()
 
+def delete_reading(datetime):
+    with sqlite3.connect(DB_PATH) as conn:
+        return conn.execute("""
+            DELETE FROM readings
+            WHERE timestamp = ?
+        """, (datetime,))
 
 
 
