@@ -14,16 +14,25 @@ import {
 
 type TemperatureHistoryProps = {
   readings: TempReading[];
+  type: "room" | "pi";
 };
 
-export default function TempHistory({readings,}: TemperatureHistoryProps) {
+export default function TempHistory({readings, type}: TemperatureHistoryProps) {
 
     const graphData = [];
 
     for (let i = 0; i < readings.length; i++) {
+        let temp;
+
+        if (type === "room") {
+            temp = readings[i].room_temp;
+        } else {
+            temp = readings[i].pi_temp;
+        }
+
         graphData.push({
-        time: readings[i].timestamp.slice(11, 16),
-        temperature: readings[i].room_temp
+            time: readings[i].timestamp.slice(11, 16),
+            temperature: temp
         });
     }
 

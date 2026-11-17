@@ -25,9 +25,17 @@ export default function Home() {
       return;
     }
 
-    getTemperaturesByDate(selectedDate)
-      .then(setReadings)
-      .catch(console.error);
+    function fetchData() {
+      getTemperaturesByDate(selectedDate)
+        .then(setReadings)
+        .catch(console.error);
+    }
+
+    fetchData(); // fetch immediately
+
+    const interval = setInterval(fetchData, 60 * 1000);
+
+    return () => clearInterval(interval);
   }, [selectedDate]);
 
   return (
@@ -43,9 +51,13 @@ export default function Home() {
           />
         </div>
 
-        <TempStats readings={readings}></TempStats>
+        <TempStats readings={readings} type="room"></TempStats>
         <div className="pl-5 pr-5">
-          <TempHistory readings={readings} />
+          <TempHistory readings={readings} type="room"/>
+        </div>
+        <TempStats readings={readings} type="pi"></TempStats>
+        <div className="pl-5 pr-5">
+          <TempHistory readings={readings} type="pi"/>
         </div>
       </div>
     </main>

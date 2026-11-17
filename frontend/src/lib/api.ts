@@ -1,6 +1,7 @@
 export type TempReading = {
     timestamp: string;
     room_temp: number;
+    pi_temp: number;
 }
 
 export async function getTemperatures(): Promise<TempReading[]> {

@@ -11,22 +11,22 @@ def init_db():
             CREATE TABLE IF NOT EXISTS readings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TEXT NOT NULL UNIQUE,
-                room_temp REAL NOT NULL
+                room_temp REAL NOT NULL,
+                pi_temp REAL NOT NULL
             )
         """)
-#pi_temp REAL NOT NULL
 
-def save_reading(time, room_temp):
+def save_reading(time, room_temp, pi_temp):
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute("""
             INSERT OR IGNORE INTO readings 
-            (timestamp, room_temp)
-            VALUES (?, ?)""", (time, room_temp))
+            (timestamp, room_temp, pi_temp)
+            VALUES (?, ?, ?)""", (time, room_temp, pi_temp))
 
 def get_readings():
     with sqlite3.connect(DB_PATH) as conn:
         return conn.execute("""
-            SELECT timestamp, room_temp
+            SELECT timestamp, room_temp, pi_temp
             FROM readings
             ORDER BY timestamp
         """).fetchall()
@@ -34,7 +34,7 @@ def get_readings():
 def get_readings_by_date(date):
     with sqlite3.connect(DB_PATH) as conn:
         return conn.execute("""
-            SELECT timestamp, room_temp
+            SELECT timestamp, room_temp, pi_temp
             FROM readings
             WHERE timestamp LIKE ?
             ORDER BY timestamp""",
@@ -45,7 +45,7 @@ def delete_reading(datetime):
         return conn.execute("""
             DELETE FROM readings
             WHERE timestamp = ?
-        """, (datetime,))
+        """, (datetime,)).rowcount
 
 
 
