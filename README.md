@@ -11,7 +11,7 @@ Uses a DHT11 temperature and humidity sensor connected to the Raspberry Pi 5.
 - Breadboard
 - Raspberry Pi GPIO extension board and ribbon cable
 - Jumper wires
-- 10kΩ pull-up resistor
+- 10kΩ resistor
 - Freenove DHT11 library (`Freenove_DHT.py` and `libdht.so`)
 - Python 3, Node.js, and npm
 
@@ -27,8 +27,6 @@ uvicorn main:app --reload
 
 ## 2. Start Sensor
 
-Open a separate terminal:
-
 ```bash
 cd backend
 source .venv/bin/activate
@@ -37,12 +35,10 @@ python sensor.py
 
 ## 3. Start Frontend
 
-Open another terminal:
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Access the dashboard at `http://localhost:3000`.
+dashboard at `http://localhost:3000`.
